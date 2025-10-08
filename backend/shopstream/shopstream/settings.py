@@ -205,7 +205,7 @@ DEFAULT_FROM_EMAIL = "pain@xyz.com"
 
 
 
-#frontend url (change it after production sha)
+#frontend url (change it after production to your main frontend url)
 FRONTEND_URL="http://localhost:5173"
 
 # blacklist token

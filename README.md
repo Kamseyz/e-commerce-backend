@@ -69,6 +69,77 @@ e-commerce_backend/
     python manage.py runserver
     ```
 
+## Magic Link Login
+
+ShopStream supports passwordless authentication via Magic Links.  
+When a user logs in or registers, they receive a unique link via email that can be consumed to obtain JWT tokens.
+
+
+### 🔑 Magic Link Login Flow
+
+1. **User Receives Magic Link**
+
+   - After login (`POST /login/`), the backend sends a magic link to the user's email.
+   - Example link:
+     ```
+     http://localhost:5173/login/magic?token=8b9769e9-20e1-414a-9deb-76f9de476ed6&redirect=/dashboard
+     ```
+
+2. **Consume the Token**
+
+   - The frontend extracts the `token` from the URL and sends it to the backend:
+     ```
+     POST /consume-link/
+     Content-Type: application/json
+
+     {
+       "token": "8b9769e9-20e1-414a-9deb-76f9de476ed6"
+     }
+     ```
+   - **Response:**
+     ```json
+     {
+       "access": "<your-access-token>"
+     }
+     ```
+   - The refresh token is set as an HTTP-only cookie.
+
+3. **Use the JWT Access Token**
+
+   - Include the access token in the Authorization header to call protected endpoints:
+     ```
+     GET /api/products/
+     Authorization: Bearer <your-access-token>
+     ```
+
+4. **Refresh the Access Token**
+
+   - When the access token expires, refresh it using the cookie-based refresh token:
+     ```
+     POST /refresh/
+     ```
+   - **Response:**
+     ```json
+     {
+       "access": "<new-access-token>"
+     }
+     ```
+
+5. **Logout (Optional)**
+
+   - Call the logout endpoint to invalidate tokens and remove the refresh cookie:
+     ```
+     POST /logout/
+     ```
+
+---
+
+**Notes:**
+- All endpoints are relative to your backend root (e.g., `/login/`, `/consume-link/`, `/refresh/`, `/logout/`).
+- The refresh token is stored as an HTTP-only cookie for security.
+- Update the frontend URL and redirect path as needed for your deployment.
+
+
 ## Environment Variables Setup
 
 Before running the project, create a `.env` file in your project root (next to `manage.py`) and add the following keys:
