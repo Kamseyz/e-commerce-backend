@@ -214,4 +214,4 @@ Also, don't forget to add `<your_ngrok_subdomain>.ngrok.io` to your allowed host
 
 ## Credits
 
-Backend designed by me (Dike Ebuka Christopher).
+Backend designed by me.
